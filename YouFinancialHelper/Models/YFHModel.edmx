@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="YFHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Expenditure_Base">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
+          <Property Name="FK_Category" Type="int" Nullable="false" />
+          <Property Name="status" Type="tinyint" Nullable="false" />
+          <Property Name="E_Relevance" Type="tinyint" Nullable="false" />
+          <Property Name="FK_User" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Expenditure_Objective">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_Expenditure_Base" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Subtotal" Type="float" Nullable="false" />
+          <Property Name="Objective_Date" Type="date" Nullable="false" />
+          <Property Name="Annotations" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Movements">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_Expenditure_Base" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Subtotal" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Last_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Nickname" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Currency" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Expenditure_Base_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Base">
+              <PropertyRef Name="FK_Category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expenditure_Base_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Base">
+              <PropertyRef Name="FK_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expenditure_Objective_Expenditure_Base">
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="1" />
+          <End Role="Expenditure_Objective" Type="Self.Expenditure_Objective" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Expenditure_Base">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Objective">
+              <PropertyRef Name="FK_Expenditure_Base" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Movements_Expenditure_Base">
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="1" />
+          <End Role="Movements" Type="Self.Movements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Expenditure_Base">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Movements">
+              <PropertyRef Name="FK_Expenditure_Base" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="YFHModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expenditure_Base" EntityType="Self.Expenditure_Base" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expenditure_Objective" EntityType="Self.Expenditure_Objective" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movements" EntityType="Self.Movements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Expenditure_Base_Category" Association="Self.FK_Expenditure_Base_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expenditure_Base_User" Association="Self.FK_Expenditure_Base_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expenditure_Objective_Expenditure_Base" Association="Self.FK_Expenditure_Objective_Expenditure_Base">
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+            <End Role="Expenditure_Objective" EntitySet="Expenditure_Objective" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Movements_Expenditure_Base" Association="Self.FK_Movements_Expenditure_Base">
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+            <End Role="Movements" EntitySet="Movements" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="YFHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Expenditure_Base" Relationship="Self.FK_Expenditure_Base_Category" FromRole="Category" ToRole="Expenditure_Base" />
+        </EntityType>
+        <EntityType Name="Expenditure_Base">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Value" Type="Double" Nullable="false" />
+          <Property Name="FK_Category" Type="Int32" Nullable="false" />
+          <Property Name="status" Type="Byte" Nullable="false" />
+          <Property Name="E_Relevance" Type="Byte" Nullable="false" />
+          <Property Name="FK_User" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Expenditure_Base_Category" FromRole="Expenditure_Base" ToRole="Category" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Expenditure_Base_User" FromRole="Expenditure_Base" ToRole="User" />
+          <NavigationProperty Name="Expenditure_Objective" Relationship="Self.FK_Expenditure_Objective_Expenditure_Base" FromRole="Expenditure_Base" ToRole="Expenditure_Objective" />
+          <NavigationProperty Name="Movements" Relationship="Self.FK_Movements_Expenditure_Base" FromRole="Expenditure_Base" ToRole="Movements" />
+        </EntityType>
+        <EntityType Name="Expenditure_Objective">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_Expenditure_Base" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Subtotal" Type="Double" Nullable="false" />
+          <Property Name="Objective_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Annotations" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Expenditure_Base" Relationship="Self.FK_Expenditure_Objective_Expenditure_Base" FromRole="Expenditure_Objective" ToRole="Expenditure_Base" />
+        </EntityType>
+        <EntityType Name="Movement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_Expenditure_Base" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Subtotal" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Expenditure_Base" Relationship="Self.FK_Movements_Expenditure_Base" FromRole="Movements" ToRole="Expenditure_Base" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Last_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nickname" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Currency" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Expenditure_Base" Relationship="Self.FK_Expenditure_Base_User" FromRole="User" ToRole="Expenditure_Base" />
+        </EntityType>
+        <Association Name="FK_Expenditure_Base_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Base">
+              <PropertyRef Name="FK_Category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expenditure_Base_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Base">
+              <PropertyRef Name="FK_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expenditure_Objective_Expenditure_Base">
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="1" />
+          <End Role="Expenditure_Objective" Type="Self.Expenditure_Objective" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Expenditure_Base">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Expenditure_Objective">
+              <PropertyRef Name="FK_Expenditure_Base" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Movements_Expenditure_Base">
+          <End Role="Expenditure_Base" Type="Self.Expenditure_Base" Multiplicity="1" />
+          <End Role="Movements" Type="Self.Movement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Expenditure_Base">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Movements">
+              <PropertyRef Name="FK_Expenditure_Base" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="YFHConext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Expenditure_Base" EntityType="Self.Expenditure_Base" />
+          <EntitySet Name="Expenditure_Objective" EntityType="Self.Expenditure_Objective" />
+          <EntitySet Name="Movements" EntityType="Self.Movement" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Expenditure_Base_Category" Association="Self.FK_Expenditure_Base_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expenditure_Base_User" Association="Self.FK_Expenditure_Base_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expenditure_Objective_Expenditure_Base" Association="Self.FK_Expenditure_Objective_Expenditure_Base">
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+            <End Role="Expenditure_Objective" EntitySet="Expenditure_Objective" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Movements_Expenditure_Base" Association="Self.FK_Movements_Expenditure_Base">
+            <End Role="Expenditure_Base" EntitySet="Expenditure_Base" />
+            <End Role="Movements" EntitySet="Movements" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="YFHModelStoreContainer" CdmEntityContainer="YFHConext">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="YFHModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expenditure_Base">
+            <EntityTypeMapping TypeName="YFHModel.Expenditure_Base">
+              <MappingFragment StoreEntitySet="Expenditure_Base">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="FK_Category" ColumnName="FK_Category" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="E_Relevance" ColumnName="E_Relevance" />
+                <ScalarProperty Name="FK_User" ColumnName="FK_User" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expenditure_Objective">
+            <EntityTypeMapping TypeName="YFHModel.Expenditure_Objective">
+              <MappingFragment StoreEntitySet="Expenditure_Objective">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="FK_Expenditure_Base" ColumnName="FK_Expenditure_Base" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+                <ScalarProperty Name="Objective_Date" ColumnName="Objective_Date" />
+                <ScalarProperty Name="Annotations" ColumnName="Annotations" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movements">
+            <EntityTypeMapping TypeName="YFHModel.Movement">
+              <MappingFragment StoreEntitySet="Movements">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="FK_Expenditure_Base" ColumnName="FK_Expenditure_Base" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="YFHModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="Nickname" ColumnName="Nickname" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
